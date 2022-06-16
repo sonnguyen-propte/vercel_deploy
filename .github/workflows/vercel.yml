@@ -48,11 +48,10 @@ jobs:
       - name: Install modules
         run: npm install
 
-      # - name: Preview Deploy
-      #   id: vercel-action-preview
-      #   env:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
-      #     vercel-org-id: ${{ secrets.VERCEL_OLI_ORG_ID }}
-      #     vercel-project-id: ${{ secrets.VERCEL_OLI_PROJECT_ID }}
-      #     scope: ${{ secrets.VERCEL_OLI_ORG_ID}}
+      - name: Preview Deploy
+        id: vercel-action-preview
+        env:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-project-id: ${{ secrets.VERCEL_OLI_PROJECT_ID }}
+          github-comment: true
