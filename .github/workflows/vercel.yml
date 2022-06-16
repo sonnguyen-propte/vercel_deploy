@@ -1,0 +1,58 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions 
+
+name: Manual workflow
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Input specific stage, currently not working due to Actions limitation
+    inputs:
+      stage:
+        description: 'Stage to run'
+        default: 'dev'
+        required: true
+
+  push:
+    branches:
+    - master
+
+env:
+  STAGE: dev
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo "Deploying to ${{ env.STAGE }} environment"
+
+  build:
+    needs: start
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pull-requests: write
+      deployments: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+
+      - name: Install modules
+        run: npm install
+
+      # - name: Preview Deploy
+      #   id: vercel-action-preview
+      #   env:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
+      #     vercel-org-id: ${{ secrets.VERCEL_OLI_ORG_ID }}
+      #     vercel-project-id: ${{ secrets.VERCEL_OLI_PROJECT_ID }}
+      #     scope: ${{ secrets.VERCEL_OLI_ORG_ID}}
