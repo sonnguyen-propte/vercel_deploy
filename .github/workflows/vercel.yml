@@ -57,4 +57,4 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: R03CiEndbPEBwHS1PjS1LRJ7
           vercel-project-id: ${{ secrets.VERCEL_OLI_PROJECT_ID }}
-          # github-comment: true
+          github-comment: true
