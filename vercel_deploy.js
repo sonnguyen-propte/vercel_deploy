@@ -3,54 +3,84 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 const { execSync } = require('child_process')
 const exec = require('@actions/exec')
+const yargs = require('yargs');
+
+const argv = yargs
+  .command('vercel-token', 'vercel-token uses for accessing to Vercel Organization', {
+    year: {
+      type: 'string'
+    }
+  })
+  .option('working-directory', {
+    type: 'string'
+  })
+  .option('github-token', {
+    type: 'string'
+  })
+  .option('vercel-args', {
+    type: 'string'
+  })
+  .option('vercel-org-id', {
+    type: 'string'
+  })
+  .option('vercel-project-id', {
+    type: 'string'
+  })
+  .option('scope', {
+    type: 'string'
+  })
+  .option('vercel-project-name', {
+    type: 'string'
+  })
+  .option('alias-domains', {
+    type: 'string'
+  })
+  .option('github-comment', {
+    type: 'boolean'
+  })
+  .help()
+  .alias('help', 'h').argv;
+
+console.log('argv', argv)
+
+const githubToken = argv['github-token'] || ''
+const workingDirectory = argv['working-directory'] || ''
+const vercelToken = argv['vercel-token'] || ''
+const vercelArgs = argv['vercel-args'] || ''
+const vercelOrgId = argv['vercel-org-id'] || ''
+const vercelProjectId = argv['vercel-project-id'] || ''
+const vercelScope = argv['scope'] || ''
+const vercelProjectName = argv['vercel-project-name'] || ''
+const githubComment = argv['github-comment']
+const aliasDomains = (argv['alias-domains'] || '').split('\n')
+.filter((x) => x !== '')
+.map((s) => {
+  let url = s
+  let branch = slugify(context.ref.replace('refs/heads/', ''))
+  if (isPullRequestType(context.eventName)) {
+    const pr =
+      context.payload.pull_request || context.payload.pull_request_target
+    branch = slugify(pr.head.ref.replace('refs/heads/', ''))
+    url = url.replace(prNumberRegExp, context.issue.number.toString())
+  }
+  url = url.replace(branchRegExp, branch)
+
+  return url
+})
+
+if (!vercelToken)
+  throw new Error('vercel-token is required in environment variables')
+
 
 let octokit
 
 const { context } = github
-
-const githubToken = process.env['github-token']
-const githubComment = getGithubCommentInput()
-const workingDirectory = process.env['working-directory']
 
 const prNumberRegExp = /{{\s*PR_NUMBER\s*}}/g
 const branchRegExp = /{{\s*BRANCH\s*}}/g
 
 if (githubToken) {
   octokit = new github.GitHub(githubToken)
-}
-
-// Vercel
-const vercelToken = process.env['vercel-token']
-
-// if (!vercelToken)
-//   throw new Error('vercel-token is required in environment variables')
-
-const vercelArgs = process.env['vercel-args'] || ''
-const vercelOrgId = process.env['vercel-org-id'] || ''
-const vercelProjectId = process.env['vercel-project-id'] || ''
-const vercelScope = process.env['scope'] || ''
-const vercelProjectName = process.env['vercel-project-name'] || ''
-const aliasDomains = (process.env['alias-domains'] || '').split('\n')
-  .filter((x) => x !== '')
-  .map((s) => {
-    let url = s
-    let branch = slugify(context.ref.replace('refs/heads/', ''))
-    if (isPullRequestType(context.eventName)) {
-      const pr =
-        context.payload.pull_request || context.payload.pull_request_target
-      branch = slugify(pr.head.ref.replace('refs/heads/', ''))
-      url = url.replace(prNumberRegExp, context.issue.number.toString())
-    }
-    url = url.replace(branchRegExp, branch)
-
-    return url
-  })
-
-function getGithubCommentInput() {
-  const input = process.env['github-comment']
-  if (input === 'true') return true
-  if (input === 'false') return false
-  return input
 }
 
 function isPullRequestType(event) {
