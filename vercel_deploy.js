@@ -16,7 +16,7 @@ const prNumberRegExp = /{{\s*PR_NUMBER\s*}}/g
 const branchRegExp = /{{\s*BRANCH\s*}}/g
 
 if (githubToken) {
-  octokit = new github.GitHub(githubToken)
+  octokit = new github.getOctokit(githubToken)
 }
 
 // Vercel
