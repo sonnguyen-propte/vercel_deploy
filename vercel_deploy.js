@@ -25,13 +25,12 @@ const vercelToken = process.env['vercel-token']
 // if (!vercelToken)
 //   throw new Error('vercel-token is required in environment variables')
 
-const vercelArgs = process.env['vercel-args']
-const vercelOrgId = process.env['vercel-org-id']
-const vercelProjectId = process.env['vercel-project-id']
-const vercelScope = process.env['scope']
-const vercelProjectName = process.env['vercel-project-name']
-const aliasDomains = process.env['alias-domains']
-  ?.split('\n')
+const vercelArgs = process.env['vercel-args'] || ''
+const vercelOrgId = process.env['vercel-org-id'] || ''
+const vercelProjectId = process.env['vercel-project-id'] || ''
+const vercelScope = process.env['scope'] || ''
+const vercelProjectName = process.env['vercel-project-name'] || ''
+const aliasDomains = (process.env['alias-domains'] || '').split('\n')
   .filter((x) => x !== '')
   .map((s) => {
     let url = s
