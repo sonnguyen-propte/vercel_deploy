@@ -50,6 +50,8 @@ jobs:
 
       - name: Preview Deploy
         id: vercel-action-preview
+        run: |
+          node vercel_deploy.js
         env:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
