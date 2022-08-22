@@ -1,0 +1,17 @@
+name: Deployment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    name: Extract number from comment
+
+    steps:
+      - name: Extract BACKEND_PR_NUMBER from comment
+        id: extract_pr_number
+        run: |
+          bash ops/get_pull_request_number.sh
+          echo "$BACKEND_PR_NUMBER"
