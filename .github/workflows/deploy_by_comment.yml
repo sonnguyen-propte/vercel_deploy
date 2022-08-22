@@ -1,7 +1,6 @@
 name: Deployment
 
 on:
-  push:
   issue_comment:
     types: [created]
 
@@ -14,6 +13,5 @@ jobs:
       - name: Extract BACKEND_PR_NUMBER from comment
         id: extract_pr_number
         run: |
-          echo "[+] COMMENT CONTENT: ${{ github.event.comment.body }}"
-          BACKEND_PR_NUMBER=$(expr "x${{ github.event.comment.body }}" : '.*[^0-9]\([0-9]\{1,\}\)')
+          bash ops/get_pull_request_number.sh
           echo "$BACKEND_PR_NUMBER"
