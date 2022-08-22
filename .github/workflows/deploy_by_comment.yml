@@ -1,26 +1,17 @@
 name: Deployment
 
-on: issue_comment
+on:
+  issue_comment:
+    types: [created]
 
 jobs:
-  pr_commented:
-    # This job only runs for pull request comments
-    name: PR comment
-    if: ${{ github.event.issue.pull_request }}
+  start:
     runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo A comment on PR $NUMBER
-        env:
-          NUMBER: ${{ github.event.issue.number }}
+    name: Extract number from comment
 
-  issue_commented:
-    # This job only runs for issue comments
-    name: Issue comment
-    if: ${{ !github.event.issue.pull_request }}
-    runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo A comment on issue $NUMBER
-        env:
-          NUMBER: ${{ github.event.issue.number }}
+      - name: Extract BACKEND_PR_NUMBER from comment
+        id: extract_pr_number
+        run: |
+          bash ops/get_pull_request_number.sh
+          echo "$BACKEND_PR_NUMBER"
