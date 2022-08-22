@@ -13,5 +13,7 @@ jobs:
       - name: Extract BACKEND_PR_NUMBER from comment
         id: extract_pr_number
         run: |
-          bash ops/get_pull_request_number.sh
+          echo "[+] COMMENT CONTENT: ${{ github.event.comment.body }}"
+          BACKEND_PR_NUMBER=$(expr "x${{ github.event.comment.body }}" : '.*[^0-9]\([0-9]\{1,\}\)')
           echo "$BACKEND_PR_NUMBER"
+
