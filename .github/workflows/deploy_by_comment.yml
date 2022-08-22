@@ -13,6 +13,6 @@ jobs:
       - name: Extract BACKEND_PR_NUMBER from comment
         id: extract_pr_number
         run: |
-          bash ops/get_pull_request_number.sh
+          bash ./ops/get_pull_request_number.sh
           echo "$BACKEND_PR_NUMBER"
 
