@@ -8,12 +8,24 @@ jobs:
   start:
     runs-on: ubuntu-latest
     name: Extract number from comment
+    concurrency: staging_environment
 
     steps:
+      - name: Sleep for 30 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '30s'
+
       - name: Extract BACKEND_PR_NUMBER from comment
         id: extract_pr_number
         run: |
           echo "[+] COMMENT CONTENT: ${{ github.event.comment.body }}"
           BACKEND_PR_NUMBER=$(expr "x${{ github.event.comment.body }}" : '.*[^0-9]\([0-9]\{1,\}\)')
           echo "$BACKEND_PR_NUMBER"
-
+          echo "helloo" >> README.md
+          git config --global user.email "github@propte.io"
+          git config --global user.name "Github Action"
+          git add .
+          git commit -m "Update readme from github action"
+          git pull origin main
+          git push origin main
