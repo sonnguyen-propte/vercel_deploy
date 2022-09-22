@@ -8,9 +8,7 @@ jobs:
   start:
     runs-on: ubuntu-latest
     name: Extract number from comment
-    concurrency:
-      group: queue
-      cancel-in-progress: false
+    concurrency: queue
 
     steps:
       - name: Sleep for 30 seconds
