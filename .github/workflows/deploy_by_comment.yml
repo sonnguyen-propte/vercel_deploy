@@ -8,7 +8,9 @@ jobs:
   start:
     runs-on: ubuntu-latest
     name: Extract number from comment
-    concurrency: staging_environment
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Sleep for 30 seconds
