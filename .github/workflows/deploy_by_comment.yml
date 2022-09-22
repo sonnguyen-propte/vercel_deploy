@@ -20,8 +20,6 @@ jobs:
         id: extract_pr_number
         run: |
           echo "[+] COMMENT CONTENT: ${{ github.event.comment.body }}"
-          BACKEND_PR_NUMBER=$(expr "x${{ github.event.comment.body }}" : '.*[^0-9]\([0-9]\{1,\}\)')
-          echo "$BACKEND_PR_NUMBER"
           echo "helloo" >> README.md
           git config --global user.email "github@propte.io"
           git config --global user.name "Github Action"
