@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Extract number from comment
     concurrency:
-      group: ${{ github.event.pull_request.head.ref }}
+      group: ${{ github.event.number }}
       cancel-in-progress: true
 
     steps:
