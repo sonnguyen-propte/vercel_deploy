@@ -29,5 +29,3 @@ jobs:
           git commit -m "Update readme from github action"
           git pull origin main
           git push origin main
-
-
