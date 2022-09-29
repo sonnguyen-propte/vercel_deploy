@@ -1,32 +1,14 @@
 name: Deployment
 
 on:
-  issue_comment:
-    types: [created]
+  pull_request:
+    branches: [main]
+    types: [closed]
 
 jobs:
   start:
     runs-on: ubuntu-latest
-    name: Extract number from comment
-
     steps:
-      - uses: ahmadnassri/action-workflow-queue@v1
-      - uses: actions/checkout@v2
-      - name: Sleep for 30 seconds
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '30s'
-
-      - name: Extract BACKEND_PR_NUMBER from comment
-        id: extract_pr_number
-        run: |
-          git pull origin main
-          echo "[+] COMMENT CONTENT: ${{ github.event.comment.body }}"
-          echo "helloo" >> README.md
-          git config --global user.email "github@propte.io"
-          git config --global user.name "Github Action"
-          git add .
-          git commit -m "Update readme from github action"
-          git push origin main
+      - run: sleep 3m
 
 
