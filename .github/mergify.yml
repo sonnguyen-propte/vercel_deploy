@@ -1,8 +1,12 @@
+queue_rules:
+  - name: default
+    conditions: []
+
 pull_request_rules:
   - name: Automatic merge ⬇️ on approval and labeled ✔
     conditions:
       - base=main
       - label=wait-for-merging
     actions:
-      merge:
-        method: merge
+      queue:
+        name: default
