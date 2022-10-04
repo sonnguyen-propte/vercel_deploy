@@ -44,6 +44,7 @@ jobs:
     needs: start
     runs-on: ubuntu-latest
     steps:
+      - run: echo "SHA: ${{ needs.start.outputs.BRANCH_SHA }}"
       - uses: actions/checkout@v2
         with:
           ref: ${{ needs.start.outputs.BRANCH_SHA }}
