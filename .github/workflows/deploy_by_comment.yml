@@ -21,7 +21,7 @@ jobs:
       - name: Extract BACKEND_PR_NUMBER from comment
         id: extract_pr_number
         run: |
-          echo "[+] COMMENT CONTENT: ${{ github.ref }}"
+          echo "[+] COMMENT CONTENT: ${{ github.event.issue.pull_request }}"
           echo "helloo" >> README.md
           git config --global user.email "github@propte.io"
           git config --global user.name "Github Action"
