@@ -41,9 +41,9 @@ jobs:
           echo "::set-output name=BRANCH_SHA::${BRANCH_SHA}"
 
   build:
+    needs: start
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           ref: ${{ needs.start.outputs.BRANCH_SHA }}
