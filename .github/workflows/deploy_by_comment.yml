@@ -12,6 +12,9 @@ jobs:
       group: ${{ github.ref }}
       cancel-in-progress: true
 
+    outputs:
+      BRANCH_SHA: ${{ steps.export-branch-sha.outputs.BRANCH_SHA }}
+
     steps:
       - uses: actions/github-script@v3
         id: get-pr
@@ -30,14 +33,17 @@ jobs:
               core.setFailed(`Request failed with error ${err}`)
             }
 
-      - name: Extract BACKEND_PR_NUMBER from comment
-        id: extract_pr_number
+      - name: Set BRANCH_SHA as output
+        id: export-branch-sha
         run: |
-          echo '${{ fromJSON(steps.get-pr.outputs.result).head.sha }}'
-          echo "helloo" >> README.md
-          git config --global user.email "github@propte.io"
-          git config --global user.name "Github Action"
-          git add .
-          git commit -m "Update readme from github action"
-          git pull origin main
-          git push origin main
+          BRANCH_SHA='${{ fromJSON(steps.get-pr.outputs.result).head.sha }}'
+          echo "[+] BRANCH_SHA: $BRANCH_SHA"
+          echo "::set-output name=BRANCH_SHA::${BRANCH_SHA}"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.start.outputs.BRANCH_SHA }}
