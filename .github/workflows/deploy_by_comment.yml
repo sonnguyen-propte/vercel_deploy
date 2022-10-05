@@ -58,6 +58,7 @@ jobs:
 
     steps:
       - name: Extract BACKEND_PR_NUMBER from comment
+        if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/deploy')
         id: extract-pr-number
         run: |
           echo "[+] COMMENT CONTENT: ${{ github.event.comment.body }}"
