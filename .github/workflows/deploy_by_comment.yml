@@ -51,7 +51,7 @@ jobs:
 
   attach-oli-env:
     runs-on: ubuntu-latest
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/get-oli-env')
+    if: ${{ github.event.issue.pull_request }} && startsWith(github.event.comment.body, '/get-oli-env')
     name: Attach oli/.serverless-env file to pull request
     permissions: write-all
 
@@ -61,7 +61,7 @@ jobs:
 
   attach-platform-env:
     runs-on: ubuntu-latest
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/get-platform-env')
+    if: ${{ github.event.issue.pull_request }} && startsWith(github.event.comment.body, '/get-platform-env')
     name: Attach platform/.serverless-env file to pull request
     permissions: write-all
 
@@ -72,13 +72,13 @@ jobs:
   oli-ui-preview:
     name: oli-ui Preview
     runs-on: ubuntu-latest
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/deploy-oli-ui-preview')
+    if: ${{ github.event.issue.pull_request }} && startsWith(github.event.comment.body, '/deploy-oli-ui-preview')
     steps:
       - run: echo "Oli UI Preview"
 
   landonline-ui-preview:
     name: landonline-ui Preview
     runs-on: ubuntu-latest
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/deploy-landonline-ui-preview')
+    if: ${{ github.event.issue.pull_request }} && startsWith(github.event.comment.body, '/deploy-landonline-ui-preview')
     steps:
       - run: echo "Oli UI Preview"
