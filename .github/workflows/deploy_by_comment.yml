@@ -5,46 +5,80 @@ on:
     types: [created]
 
 jobs:
-  start:
-    runs-on: ubuntu-latest
-    name: Extract number from comment
-    concurrency:
-      group: ${{ github.ref }}
-      cancel-in-progress: true
+  # start:
+  #   runs-on: ubuntu-latest
+  #   name: Extract number from comment
+  #   concurrency:
+  #     group: ${{ github.ref }}
+  #     cancel-in-progress: true
 
-    outputs:
-      BRANCH_SHA: ${{ steps.export-branch-sha.outputs.BRANCH_SHA }}
+  #   outputs:
+  #     BRANCH_SHA: ${{ steps.export-branch-sha.outputs.BRANCH_SHA }}
+
+  #   steps:
+  #     - uses: actions/github-script@v3
+  #       id: get-pr
+  #       with:
+  #         script: |
+  #           const request = {
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             pull_number: context.issue.number
+  #           }
+  #           core.info(`Getting PR #${request.pull_number} from ${request.owner}/${request.repo}`)
+  #           try {
+  #             const result = await github.pulls.get(request)
+  #             return result.data
+  #           } catch (err) {
+  #             core.setFailed(`Request failed with error ${err}`)
+  #           }
+
+  #     - name: Set BRANCH_SHA as output
+  #       id: export-branch-sha
+  #       run: |
+  #         BRANCH_SHA='${{ fromJSON(steps.get-pr.outputs.result).head.sha }}'
+  #         echo "[+] BRANCH_SHA: $BRANCH_SHA"
+  #         echo "::set-output name=BRANCH_SHA::${BRANCH_SHA}"
+
+  # build:
+  #   needs: start
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: echo "SHA  ${{ needs.start.outputs.BRANCH_SHA }}"
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         ref: ${{ needs.start.outputs.BRANCH_SHA }}
+
+  attach-oli-env:
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.comment.body, '/get-oli-env')
+    name: Attach oli/.serverless-env file to pull request
+    permissions: write-all
 
     steps:
-      - uses: actions/github-script@v3
-        id: get-pr
-        with:
-          script: |
-            const request = {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number
-            }
-            core.info(`Getting PR #${request.pull_number} from ${request.owner}/${request.repo}`)
-            try {
-              const result = await github.pulls.get(request)
-              return result.data
-            } catch (err) {
-              core.setFailed(`Request failed with error ${err}`)
-            }
+      - name: oli Preview
+        run: echo "Get oli env"
 
-      - name: Set BRANCH_SHA as output
-        id: export-branch-sha
-        run: |
-          BRANCH_SHA='${{ fromJSON(steps.get-pr.outputs.result).head.sha }}'
-          echo "[+] BRANCH_SHA: $BRANCH_SHA"
-          echo "::set-output name=BRANCH_SHA::${BRANCH_SHA}"
-
-  build:
-    needs: start
+  attach-platform-env:
     runs-on: ubuntu-latest
+    if: startsWith(github.event.comment.body, '/get-platform-env')
+    name: Attach platform/.serverless-env file to pull request
+    permissions: write-all
+
     steps:
-      - run: echo "SHA  ${{ needs.start.outputs.BRANCH_SHA }}"
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ needs.start.outputs.BRANCH_SHA }}
+      - name: platform Preview
+        run: echo "Attach platform env"
+
+  oli-ui-preview:
+    name: oli-ui Preview
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.comment.body, '/deploy-oli-ui-preview')
+    steps:
+      - run: echo "Oli UI Preview"
+
+  landonline-ui-preview:
+    name: landonline-ui Preview
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.comment.body, '/deploy-landonline-ui-preview')
+    steps:
+      - run: echo "Oli UI Preview"
